@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	{% include "../globel/head.html" ignore missing %}
+	{% block css %}{% endblock %}
+</head>
+
+<body>
+	<section id="vApp" :class="headerFull? 'header-full': ''">
+		<div class="main-content">
+		<div class="wrapper">
+			{% block body %}{% endblock %}
+		</div>
+		</div>
+		{% include "../globel/footer.html" ignore missing %}
+	</section>
+	{% block js %}{% endblock %}
+</body>
+
+</html>
