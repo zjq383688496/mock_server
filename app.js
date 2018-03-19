@@ -7,6 +7,8 @@ const bodyparser = require('koa-bodyparser')
 const logger     = require('koa-logger')
 const swig       = require('swig')
 
+const config     = require('./config')
+
 // swig默认配置
 swig.setDefaults({
 	varControls: ['[[', ']]']
