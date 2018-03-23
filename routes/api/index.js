@@ -6,7 +6,7 @@ const Tree   = require('require-folder-tree')
 
 const proj   = Tree(config.root + '/template/api')
 
-console.log(proj)
+// console.log(proj)
 
 router.prefix('/api')
 
@@ -34,12 +34,12 @@ function RouteCreate(path, project) {
 
 		route.prefix(path + p)
 
-		console.log(p)
+		// console.log(p)
 		for (let q in pj.child) {
 			console.log(q)
-			var node   = pj.child[q],
+			let node   = pj.child[q],
 				method = node.method,
-				RP     = new RegExp(type)
+				RP     = new RegExp(node.type || type)
 
 			route.use(async (ctx, next) => {
 				var ct = ctx.header['content-type']
@@ -48,7 +48,7 @@ function RouteCreate(path, project) {
 					return ctx.body = 'Content-Type Error!'
 				}
 				await next()
-				console.log(ct)
+				// console.log(ct)
 			})
 
 			route[method](q, result(node, parent, pk))
