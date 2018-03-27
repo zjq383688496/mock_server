@@ -19,7 +19,10 @@ onerror(app)
 
 // 中间件
 app.use(bodyparser({
-	enableTypes:['json', 'form', 'text']
+	enableTypes:['json', 'form', 'text'],
+	formLimit: '5mb',
+	jsonLimit: '5mb',
+	textLimit: '5mb',
 }))
 app.use(json())
 app.use(logger())

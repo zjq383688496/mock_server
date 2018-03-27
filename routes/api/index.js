@@ -10,12 +10,32 @@ const proj   = Tree(config.root + '/template/api')
 
 router.prefix('/api')
 
+var delayRes = (ctx, data) => {
+	ctx.body = data
+}
+
 // 返回数据格式
-function result(node, parent, pk) {
-	return (ctx) => {
-		var data = node.json
-		parent[pk] = Mock.mock(data)
-		ctx.body = parent
+function result(node, parent, pk, pj) {
+	return async (ctx) => {
+		let data  = node.json,
+			array = node.array
+		if (array) {
+			parent[`${pk}${array}`] = data
+			delete parent[pk]
+			data = Mock.mock(parent)
+		} else {
+			parent[pk] = Mock.mock(data)
+			data = parent
+		}
+		async function delay(time) {
+			return new Promise((resolve, reject) => {
+				setTimeout(() => {
+					resolve()
+				}, time)
+			})
+		}
+		await delay(Math.floor(Math.random()*1000))
+		await delayRes(ctx, data)
 	}
 }
 
@@ -43,15 +63,15 @@ function RouteCreate(path, project) {
 
 			route.use(async (ctx, next) => {
 				var ct = ctx.header['content-type']
-				if (!RP.test(ct)) {
+				console.log(method)
+				if (method === 'post' && !RP.test(ct)) {
 					ctx.status = 400
 					return ctx.body = 'Content-Type Error!'
 				}
 				await next()
-				// console.log(ct)
 			})
 
-			route[method](q, result(node, parent, pk))
+			route[method](q, result(node, parent, pk, pj))
 		}
 
 		router.use(route.routes(), route.allowedMethods())
